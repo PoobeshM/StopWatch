@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stopwatch</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+     
+      
+    }
+     #myVideo {
+      position: fixed;
+      
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .stopwatch {
+      background-color: rgba(255,255,255,0.15);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .time {
+      font-size: 48px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    button {
+      font-size: 16px;
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button#start { background-color: #4CAF50; color: white; }
+    button#stop { background-color: #f44336; color: white; }
+    button#reset { background-color: #2196F3; color: white; }
+    button#lap { background-color: #ff9800; color: white; }
+
+    button:hover {
+      opacity: 0.8;
+    }
+
+    .laps {
+      margin-top: 20px;
+      text-align: left;
+      max-height: 150px;
+      overflow-y: auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background: #fff;
+      width: 200px;
+    }
+
+    .laps h3 {
+      margin: 0 0 10px;
+    }
+
+    .laps ul {
+      list-style-type: decimal;
+      padding-left: 20px;
+      margin: 0;
+    }
+    
+  </style>
+</head>
+<body>
+
+  <h1 style="color: white;">Stop Watch</h1>
+<video autoplay muted loop id="myVideo" style="background-position: 100%;">
+  <source src="Wt.mp4" type="video/mp4">
+</video>
+  <div class="stopwatch">
+    <div class="time" id="d">00:00:00</div>
+    <button id="start">Start</button>
+
+    <button id="stop">Stop</button>
+    <button id="reset">Reset</button>
+    <button id="lap">Lap</button>
+
+    <div class="laps" id="laps">
+      <h3>Laps</h3>
+      <ul id="lapList"></ul>
+    </div>
+  </div>
+
+  <script>
+    let [h, m, s] = [0, 0, 0];
+    let d = document.getElementById("d");
+    let i = null;
+
+    function u() {
+      let hh = h < 10 ? "0" + h : h;
+      let mm = m < 10 ? "0" + m : m;
+      let ss = s < 10 ? "0" + s : s;
+      d.innerText = `${hh}:${mm}:${ss}`;
+      return `${hh}:${mm}:${ss}`; // also return time string
+    }
+
+    function st() {
+      if (i !== null) return;
+      i = setInterval(() => {
+        s++;
+        if (s == 60) {
+          s = 0;
+          m++;
+        }
+        if (m == 60) {
+          m = 0;
+          h++;
+        }
+        u();
+      }, 1000);
+    }
+
+    function sp() {
+      clearInterval(i);
+      i = null;
+    }
+
+    function r() {
+      sp();
+      [h, m, s] = [0, 0, 0];
+      u();
+      document.getElementById("lapList").innerHTML = ""; // clear laps
+    }
+
+    function lap() {
+      let lapList = document.getElementById("lapList");
+      let li = document.createElement("li");
+      li.innerText = u();
+      lapList.appendChild(li);
+    }
+
+    document.getElementById("start").addEventListener("click", st);
+    document.getElementById("stop").addEventListener("click", sp);
+    document.getElementById("reset").addEventListener("click", r);
+    document.getElementById("lap").addEventListener("click", lap);
+  </script>
+
+</body>
+</html>
